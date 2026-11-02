@@ -1,46 +1,27 @@
-maze = [
-    [0, 1, 0, 0],
-    [0, 0, 0, 1],
-    [1, 0, 1, 0],
-    [0, 0, 0, 0]
-]
+def dfs(a, b, path, visited):
+    if (a, b) == (2, 0):
+        print(path)
+        return True
 
-rows = len(maze)
-cols = len(maze[0])
-
-visited = set()
-
-def dfs(x, y):
-  
-    if x < 0 or y < 0 or x >= rows or y >= cols:
+    if (a, b) in visited:
         return False
 
-    if maze[x][y] == 1:
-        return False
+    visited.add((a, b))
 
-    if (x, y) in visited:
-        return False
+    moves = [
+        (4, b),          # Fill jug A
+        (a, 3),          # Fill jug B
+        (0, b),          # Empty jug A
+        (a, 0),          # Empty jug B
+        (max(0, a-(3-b)), min(3, a+b)),  # Pour A to B
+        (min(4, a+b), max(0, b-(4-a)))   # Pour B to A
+    ]
 
-    print("Visited:", (x, y))
-
-    if (x, y) == (3, 3):
-        print("\nGoal Reached!")
-        return True
-
-    visited.add((x, y))
-    
-    if dfs(x + 1, y):
-        return True
-
-    if dfs(x - 1, y):
-        return True
-
-    if dfs(x, y + 1):
-        return True
-
-    if dfs(x, y - 1):
-        return True
+    for x, y in moves:
+        if dfs(x, y, path + [(x, y)], visited):
+            return True
 
     return False
 
-dfs(0, 0)
+
+dfs(0, 0, [(0, 0)], set())
